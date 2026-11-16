@@ -1,0 +1,24 @@
+{
+  "name": "malevich-museum",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node scripts/check-project.mjs",
+    "predev": "node scripts/sync-assets.mjs",
+    "dev": "vite --configLoader native --host 127.0.0.1",
+    "prebuild": "node scripts/sync-assets.mjs",
+    "build": "vite build --configLoader native",
+    "preview": "vite preview --configLoader native --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@gsap/react": "2.1.2",
+    "gsap": "3.15.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typograf": "7.9.1"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0"
+  }
+}

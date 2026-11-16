@@ -1,0 +1,11 @@
+node_modules/
+dist/
+public/assets/
+public/Малевич/
+.qa-browser/
+*.log
+.DS_Store
+Thumbs.db
+# Original unselected paintings stay local and are not needed for deployment.
+Малевич/*
+!Малевич/1 — *.jpg
