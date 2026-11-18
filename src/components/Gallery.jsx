@@ -2,56 +2,97 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { artworks } from '../data/catalog.js';
 import Timeline from './Timeline.jsx';
 
-export default function Gallery({ onOpen, isLightboxOpen }) {
-  const [current, setCurrent] = useState(0);
+export default function Gallery({ onOpenArtwork, onOpenCollection, isDialogOpen }) {
+  const [activeIndex, setActiveIndex] = useState(0);
   const rootRef = useRef(null);
   const lastWheelTime = useRef(-Infinity);
-  const artwork = artworks[current];
-  const select = useCallback(index => {
-    if (index >= 0 && index < artworks.length) setCurrent(index);
-  }, []);
+  const artwork = artworks[activeIndex];
+  const lastIndex = artworks.length - 1;
+
+  const selectArtwork = useCallback(index => {
+    if (index >= 0 && index <= lastIndex) {
+      setActiveIndex(index);
+    }
+  }, [lastIndex]);
 
   useEffect(() => {
     function handleKeyDown(event) {
-      if (isLightboxOpen || event.defaultPrevented) return;
-      if (event.target instanceof Element && event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
-      const rect = rootRef.current.getBoundingClientRect();
-      if (rect.top >= innerHeight / 2 || rect.bottom <= innerHeight / 2) return;
+      if (isDialogOpen || event.defaultPrevented) return;
+      if (
+        event.target instanceof Element &&
+        event.target.closest('input, textarea, select, [contenteditable="true"]')
+      ) return;
+
+      const { top, bottom } = rootRef.current.getBoundingClientRect();
+      const viewportCenter = window.innerHeight / 2;
+      if (top >= viewportCenter || bottom <= viewportCenter) return;
+
       const destinations = {
-        ArrowRight: current + 1, ArrowDown: current + 1,
-        ArrowLeft: current - 1, ArrowUp: current - 1,
-        Home: 0, End: artworks.length - 1
+        ArrowRight: activeIndex + 1,
+        ArrowDown: activeIndex + 1,
+        ArrowLeft: activeIndex - 1,
+        ArrowUp: activeIndex - 1,
+        Home: 0,
+        End: lastIndex
       };
-      if (!(event.key in destinations)) return;
+      if (!Object.hasOwn(destinations, event.key)) return;
       event.preventDefault();
-      select(destinations[event.key]);
+      selectArtwork(destinations[event.key]);
     }
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [current, isLightboxOpen, select]);
+  }, [activeIndex, isDialogOpen, lastIndex, selectArtwork]);
 
   function handleWheel(event) {
     const delta = event.deltaY + event.deltaX;
     if (event.ctrlKey || Math.abs(delta) < 8) return;
+
     const now = performance.now();
     if (now - lastWheelTime.current < 220) return;
+
     lastWheelTime.current = now;
-    select(current + Math.sign(delta));
+    selectArtwork(activeIndex + Math.sign(delta));
   }
 
   return (
     <section ref={rootRef} className="collection" id="collection" aria-label="Хронология произведений">
       <div className="gallery">
-        <div className="gallery-top"><span id="counter">{String(current + 1).padStart(3, '0')} / {artworks.length}</span></div>
-        <div className="art-stage" onWheel={handleWheel}>
-          <button className="arrow previous" aria-label="Предыдущая картина" disabled={current === 0} onClick={() => select(current - 1)}>&lt;</button>
-          <button className="art-open" aria-label="Открыть картину на весь экран" onClick={() => onOpen(artwork)}>
-            <img id="art-image" src={artwork.src} alt={`${artwork.title}, ${artwork.year}. Казимир Малевич`} />
+        <div className="gallery-toolbar">
+          <button className="gallery-collection-button" onClick={onOpenCollection}>
+            коллекция
+          </button>
+          <span className="gallery-counter">
+            {String(activeIndex + 1).padStart(3, '0')} / {artworks.length}
+          </span>
+        </div>
+
+        <div className="gallery-stage" onWheel={handleWheel}>
+          <button
+            className="gallery-arrow"
+            aria-label="Предыдущая картина"
+            disabled={activeIndex === 0}
+            onClick={() => selectArtwork(activeIndex - 1)}
+          >
+            &lt;
+          </button>
+          <button
+            className="gallery-artwork"
+            aria-label="Открыть картину на весь экран"
+            onClick={() => onOpenArtwork(artwork)}
+          >
+            <img src={artwork.src} alt={`${artwork.title}, ${artwork.year}. Казимир Малевич`} />
             <span>Развернуть ↗</span>
           </button>
-          <button className="arrow next" aria-label="Следующая картина" disabled={current === artworks.length - 1} onClick={() => select(current + 1)}>&gt;</button>
+          <button
+            className="gallery-arrow"
+            aria-label="Следующая картина"
+            disabled={activeIndex === lastIndex}
+            onClick={() => selectArtwork(activeIndex + 1)}
+          >
+            &gt;
+          </button>
         </div>
-        <Timeline current={current} onSelect={select} />
+        <Timeline activeIndex={activeIndex} onSelectArtwork={selectArtwork} />
       </div>
     </section>
   );

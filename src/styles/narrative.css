@@ -1,0 +1,120 @@
+.story-sequence {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.hero {
+  min-height: 80svh;
+}
+
+.hero-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.story-shape-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.story-shape-layer {
+  position: sticky;
+  top: 0;
+  height: 94svh;
+}
+
+.story-shapes {
+  position: absolute;
+  inset: 0 0 auto;
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.story-shapes-phone {
+  display: none;
+}
+
+.story,
+.collection-intro {
+  width: min(100% - 48px, 675px);
+  margin-inline: auto;
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+.story {
+  position: relative;
+  z-index: 2;
+  display: grid;
+}
+
+.story-part {
+  min-height: 130svh;
+}
+
+.story-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100svh;
+  padding-block: 24px;
+}
+
+.story-copy h2,
+.story-copy p {
+
+}
+
+.story-part h2 {
+  margin-bottom: 10px;
+  font-size: clamp(24px, 2.36vw, 42px);
+  font-style: italic;
+  line-height: 1.;
+}
+
+.collection-intro {
+  padding-top: clamp(20px, 4svh, 40px);
+  padding-bottom: 100px;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .story-shapes-desktop {
+    display: none;
+  }
+
+  .story-shapes-phone {
+    display: block;
+  }
+
+  .story,
+  .collection-intro {
+    font-size: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story {
+    gap: 32px;
+    padding-block: 32px;
+  }
+
+  .story-part,
+  .story-copy {
+    min-height: auto;
+  }
+
+  .story-copy {
+    padding: 0;
+  }
+
+  .story-shape-layer {
+    position: relative;
+  }
+}

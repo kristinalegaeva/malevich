@@ -1,4 +1,4 @@
-import { copyFileSync, mkdirSync, readdirSync, statSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readdirSync, statSync, unlinkSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 
@@ -24,4 +24,16 @@ function copyDirectory(source, destination, filter = () => true) {
 }
 
 copyDirectory(join(root, 'assets'), join(root, 'public/assets'));
-copyDirectory(join(root, 'Малевич'), join(root, 'public/Малевич'), name => name.startsWith('1 — ') && name.endsWith('.jpg'));
+
+const artworkSource = join(root, 'Малевич');
+const artworkOutput = join(root, 'public/Малевич');
+const isSelectedArtwork = name => name.startsWith('1 — ') && name.endsWith('.jpg');
+
+copyDirectory(artworkSource, artworkOutput, isSelectedArtwork);
+
+const sourceNames = new Set(readdirSync(artworkSource));
+for (const entry of readdirSync(artworkOutput, { withFileTypes: true })) {
+  if (entry.isFile() && isSelectedArtwork(entry.name) && !sourceNames.has(entry.name)) {
+    unlinkSync(join(artworkOutput, entry.name));
+  }
+}

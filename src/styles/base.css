@@ -1,0 +1,73 @@
+@font-face {
+  font-family: Helvetica;
+  src: url('/assets/fonts/HelveticaNeueRoman.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Helvetica;
+  src: url('/assets/fonts/HelveticaNeueMedium.otf') format('opentype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Helvetica;
+  src: url('/assets/fonts/HelveticaNeueBold.otf') format('opentype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Helvetica;
+  src: url('/assets/fonts/HelveticaNeueBoldItalic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  font-family: Helvetica, Arial, sans-serif;
+  font-synthesis: none;
+  color: #000;
+  background: #fff;
+  --accent: #C82822;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body,
+p,
+h1,
+h2 {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 2px solid #254781;
+  outline-offset: 5px;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
