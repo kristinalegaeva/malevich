@@ -6,6 +6,8 @@ export default function Gallery({ onOpenArtwork, onOpenCollection, isDialogOpen 
   const [activeIndex, setActiveIndex] = useState(0);
   const rootRef = useRef(null);
   const lastWheelTime = useRef(-Infinity);
+  const touchStart = useRef(null);
+  const swiped = useRef(false);
   const artwork = artworks[activeIndex];
   const lastIndex = artworks.length - 1;
 
@@ -54,22 +56,54 @@ export default function Gallery({ onOpenArtwork, onOpenCollection, isDialogOpen 
     selectArtwork(activeIndex + Math.sign(delta));
   }
 
+  function handlePointerDown(event) {
+    swiped.current = false;
+    if (event.pointerType !== 'touch' || !event.isPrimary) return;
+    touchStart.current = { id: event.pointerId, x: event.clientX, y: event.clientY };
+  }
+
+  function handlePointerUp(event) {
+    const start = touchStart.current;
+    if (start?.id !== event.pointerId) return;
+    touchStart.current = null;
+
+    const x = event.clientX - start.x;
+    const y = event.clientY - start.y;
+    if (Math.abs(x) < 40 || Math.abs(x) < Math.abs(y) * 1.3) return;
+
+    swiped.current = true;
+    selectArtwork(activeIndex - Math.sign(x));
+  }
+
+  function handleStageClick(event) {
+    if (!swiped.current || event.detail === 0) return;
+    swiped.current = false;
+    event.stopPropagation();
+  }
+
   return (
-    <section ref={rootRef} className="collection" id="collection" aria-label="Хронология произведений">
+    <section ref={rootRef} className="collection" id="collection" aria-label="хронология произведений">
       <div className="gallery">
         <div className="gallery-toolbar">
-          <button className="gallery-collection-button" onClick={onOpenCollection}>
-            коллекция
+          <button className="gallery-collection-button text-action" onClick={onOpenCollection}>
+            <span className="text-action-label">коллекция</span>
           </button>
           <span className="gallery-counter">
             {String(activeIndex + 1).padStart(3, '0')} / {artworks.length}
           </span>
         </div>
 
-        <div className="gallery-stage" onWheel={handleWheel}>
+        <div
+          className="gallery-stage"
+          onWheel={handleWheel}
+          onPointerDown={handlePointerDown}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={() => { touchStart.current = null; }}
+          onClickCapture={handleStageClick}
+        >
           <button
             className="gallery-arrow"
-            aria-label="Предыдущая картина"
+            aria-label="предыдущая картина"
             disabled={activeIndex === 0}
             onClick={() => selectArtwork(activeIndex - 1)}
           >
@@ -77,15 +111,15 @@ export default function Gallery({ onOpenArtwork, onOpenCollection, isDialogOpen 
           </button>
           <button
             className="gallery-artwork"
-            aria-label="Открыть картину на весь экран"
+            aria-label="открыть картину на весь экран"
             onClick={() => onOpenArtwork(artwork)}
           >
             <img src={artwork.src} alt={`${artwork.title}, ${artwork.year}. Казимир Малевич`} />
-            <span>Развернуть ↗</span>
+            <span className="gallery-artwork-label">развернуть ↗</span>
           </button>
           <button
             className="gallery-arrow"
-            aria-label="Следующая картина"
+            aria-label="следующая картина"
             disabled={activeIndex === lastIndex}
             onClick={() => selectArtwork(activeIndex + 1)}
           >

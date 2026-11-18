@@ -8,7 +8,7 @@ export default function Narrative() {
     <>
       <StorySequence>
         <header className="hero">
-          <h1 className="visually-hidden">Казимир Малевич в Русском музее</h1>
+          <h1 className="visually-hidden">Казимир Малевич в русском музее</h1>
           <picture>
             <source media="(max-width: 760px)" srcSet={assetUrl('assets/header phone.svg')} />
             <img className="hero-image" src={assetUrl('assets/header.svg')} alt="" />

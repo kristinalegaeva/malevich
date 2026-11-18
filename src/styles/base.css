@@ -14,13 +14,6 @@
 
 @font-face {
   font-family: Helvetica;
-  src: url('/assets/fonts/HelveticaNeueBold.otf') format('opentype');
-  font-weight: 700;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: Helvetica;
   src: url('/assets/fonts/HelveticaNeueBoldItalic.otf') format('opentype');
   font-weight: 700;
   font-style: italic;
@@ -33,10 +26,16 @@
   color: #000;
   background: #fff;
   --accent: #C82822;
+  --underline-height: 1px;
 }
 
 * {
   box-sizing: border-box;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
 }
 
 body,
@@ -55,12 +54,40 @@ button {
 }
 
 button:focus-visible {
-  outline: 2px solid #254781;
+  outline: 2px solid var(--accent);
   outline-offset: 5px;
 }
 
 button:disabled {
   cursor: default;
+}
+
+.text-action-label {
+  background: linear-gradient(currentColor, currentColor) center bottom / 0 var(--underline-height) no-repeat;
+  padding-bottom: 2px;
+  transition: color 180ms ease, background-size 220ms ease;
+}
+
+.text-action:not(:disabled):is(:hover, :focus-visible) .text-action-label {
+  color: var(--accent);
+  background-size: 100% var(--underline-height);
+}
+
+.artwork-caption {
+  color: #000;
+  line-height: 1;
+  text-align: center;
+}
+
+.artwork-caption-year {
+  display: block;
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-action-label {
+    transition: none;
+  }
 }
 
 .visually-hidden {

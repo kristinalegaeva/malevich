@@ -22,7 +22,9 @@ export default function FullscreenDialog({ className, label, children, onClose }
       onCancel={handleCancel}
     >
       {children}
-      <button className="fullscreen-close" aria-label="Закрыть" onClick={onClose}>×</button>
+      <button className="fullscreen-close" aria-label="закрыть" onClick={onClose}>
+        ×
+      </button>
     </dialog>
   );
 }
