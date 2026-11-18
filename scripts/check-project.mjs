@@ -10,6 +10,7 @@ assert.equal(new Set(artworks.map(artwork => artwork.src)).size, artworks.length
 
 for (const artwork of artworks) {
   assert.ok(artwork.src.startsWith('Малевич/1 — '), `Unexpected image: ${artwork.src}`);
+  assert.ok(!artwork.title.includes('_') && !artwork.src.includes('_'), `Unexpected underscore: ${artwork.src}`);
   const file = statSync(join(root, artwork.src));
   assert.ok(file.size > 0 && file.size < 100 * 1024 * 1024, `Invalid image size: ${artwork.src}`);
 }

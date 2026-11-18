@@ -30,9 +30,9 @@
 :root {
   font-family: Helvetica, Arial, sans-serif;
   font-synthesis: none;
-  color: #111;
+  color: #000;
   background: #fff;
-  --accent: #c42622;
+  --accent: #C82822;
 }
 
 * {

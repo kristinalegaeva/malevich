@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import FullscreenDialog from './FullscreenDialog.jsx';
 
 const initialView = { scale: 1, x: 0, y: 0 };
 
 export default function Lightbox({ artwork, onClose }) {
-  const dialogRef = useRef(null);
   const stageRef = useRef(null);
   const imageRef = useRef(null);
   const activePointers = useRef(new Map());
@@ -19,16 +19,6 @@ export default function Lightbox({ artwork, onClose }) {
       scale,
       x: Math.max(-limitX, Math.min(limitX, next.x)),
       y: Math.max(-limitY, Math.min(limitY, next.y))
-    };
-  }, []);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    dialog.showModal();
-    document.body.classList.add('modal-open');
-    return () => {
-      dialog.close();
-      document.body.classList.remove('modal-open');
     };
   }, []);
 
@@ -85,11 +75,6 @@ export default function Lightbox({ artwork, onClose }) {
     activePointers.current.delete(event.pointerId);
   }
 
-  function handleCancel(event) {
-    event.preventDefault();
-    onClose();
-  }
-
   function toggleZoom() {
     setView(previous => previous.scale > 1
       ? initialView
@@ -98,7 +83,7 @@ export default function Lightbox({ artwork, onClose }) {
   }
 
   return (
-    <dialog ref={dialogRef} className="lightbox" aria-label="Полноэкранный просмотр картины" onCancel={handleCancel}>
+    <FullscreenDialog className="lightbox" label="Полноэкранный просмотр картины" onClose={onClose}>
       <div
         ref={stageRef}
         className={`lightbox-stage${view.scale > 1 ? ' is-zoomed' : ''}`}
@@ -119,7 +104,6 @@ export default function Lightbox({ artwork, onClose }) {
           style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.scale})` }}
         />
       </div>
-      <button className="lightbox-close" aria-label="Закрыть просмотр" onClick={onClose}>×</button>
-    </dialog>
+    </FullscreenDialog>
   );
 }

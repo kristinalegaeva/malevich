@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { artworks } from '../data/catalog.js';
 import Timeline from './Timeline.jsx';
 
-export default function Gallery({ onOpenArtwork, isLightboxOpen }) {
+export default function Gallery({ onOpenArtwork, onOpenCollection, isDialogOpen }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const rootRef = useRef(null);
   const lastWheelTime = useRef(-Infinity);
@@ -17,7 +17,7 @@ export default function Gallery({ onOpenArtwork, isLightboxOpen }) {
 
   useEffect(() => {
     function handleKeyDown(event) {
-      if (isLightboxOpen || event.defaultPrevented) return;
+      if (isDialogOpen || event.defaultPrevented) return;
       if (
         event.target instanceof Element &&
         event.target.closest('input, textarea, select, [contenteditable="true"]')
@@ -41,7 +41,7 @@ export default function Gallery({ onOpenArtwork, isLightboxOpen }) {
     }
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [activeIndex, isLightboxOpen, lastIndex, selectArtwork]);
+  }, [activeIndex, isDialogOpen, lastIndex, selectArtwork]);
 
   function handleWheel(event) {
     const delta = event.deltaY + event.deltaX;
@@ -57,8 +57,13 @@ export default function Gallery({ onOpenArtwork, isLightboxOpen }) {
   return (
     <section ref={rootRef} className="collection" id="collection" aria-label="Хронология произведений">
       <div className="gallery">
-        <div className="gallery-counter">
-          {String(activeIndex + 1).padStart(3, '0')} / {artworks.length}
+        <div className="gallery-toolbar">
+          <button className="gallery-collection-button" onClick={onOpenCollection}>
+            коллекция
+          </button>
+          <span className="gallery-counter">
+            {String(activeIndex + 1).padStart(3, '0')} / {artworks.length}
+          </span>
         </div>
 
         <div className="gallery-stage" onWheel={handleWheel}>

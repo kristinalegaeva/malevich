@@ -2,12 +2,12 @@ import sourceArtworks from './artworks.js';
 import { assetUrl } from '../utils/assetUrl.js';
 
 export const periods = [
-  { name: 'Ранние поиски', dates: '1900–1909' },
-  { name: 'Неопримитивизм', dates: '1910–1912' },
-  { name: 'Кубофутуризм', dates: '1913–1915' },
-  { name: 'Супрематизм', dates: '1915 — начало 1920-х' },
-  { name: 'Постсупрематизм', dates: 'конец 1920-х — начало 1930-х' },
-  { name: 'Поздняя фигуративная живопись', dates: '1932–1935' }
+  { name: 'ранние поиски', dates: '1900–1909' },
+  { name: 'неопримитивизм', dates: '1910–1912' },
+  { name: 'кубофутуризм', dates: '1913–1915' },
+  { name: 'супрематизм', dates: '1915 — начало 1920-х' },
+  { name: 'постсупрематизм', dates: 'конец 1920-х — начало 1930-х' },
+  { name: 'поздняя фигуративная живопись', dates: '1932–1935' }
 ];
 
 // Preliminary grouping from filenames, not a scholarly attribution.

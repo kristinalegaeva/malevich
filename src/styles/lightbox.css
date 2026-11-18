@@ -1,8 +1,8 @@
-.modal-open {
+:root:has(.fullscreen-dialog[open]) {
   overflow: hidden;
 }
 
-.lightbox {
+.fullscreen-dialog {
   border: 0;
   background: #fff;
   color: #111;
@@ -15,7 +15,7 @@
   overflow: hidden;
 }
 
-.lightbox::backdrop {
+.fullscreen-dialog::backdrop {
   background: #fff;
 }
 
@@ -50,7 +50,7 @@
   cursor: grabbing;
 }
 
-.lightbox-close {
+.fullscreen-close {
   position: absolute;
   top: 16px;
   right: 18px;
