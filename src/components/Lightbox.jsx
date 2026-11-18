@@ -6,16 +6,20 @@ export default function Lightbox({ artwork, onClose }) {
   const dialogRef = useRef(null);
   const stageRef = useRef(null);
   const imageRef = useRef(null);
-  const pointers = useRef(new Map());
+  const activePointers = useRef(new Map());
   const [view, setView] = useState(initialView);
 
-  const constrain = useCallback(next => {
+  const constrainView = useCallback(next => {
     const image = imageRef.current;
     const stage = stageRef.current;
     const scale = Math.max(1, Math.min(8, next.scale));
     const limitX = Math.max(0, (image.clientWidth * scale - stage.clientWidth) / 2);
     const limitY = Math.max(0, (image.clientHeight * scale - stage.clientHeight) / 2);
-    return { scale, x: Math.max(-limitX, Math.min(limitX, next.x)), y: Math.max(-limitY, Math.min(limitY, next.y)) };
+    return {
+      scale,
+      x: Math.max(-limitX, Math.min(limitX, next.x)),
+      y: Math.max(-limitY, Math.min(limitY, next.y))
+    };
   }, []);
 
   useEffect(() => {
@@ -32,46 +36,73 @@ export default function Lightbox({ artwork, onClose }) {
     const stage = stageRef.current;
     function handleWheel(event) {
       event.preventDefault();
-      setView(previous => constrain({ ...previous, scale: previous.scale * Math.exp(-event.deltaY * 0.002) }));
+      const zoomFactor = Math.exp(-event.deltaY * 0.002);
+      setView(previous => constrainView({ ...previous, scale: previous.scale * zoomFactor }));
     }
-    function handleResize() { setView(previous => constrain(previous)); }
+
+    function handleResize() {
+      setView(constrainView);
+    }
+
     stage.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('resize', handleResize);
     return () => {
       stage.removeEventListener('wheel', handleWheel);
       window.removeEventListener('resize', handleResize);
     };
-  }, [constrain]);
+  }, [constrainView]);
 
   function handlePointerDown(event) {
     if (event.button !== 0) return;
-    pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    activePointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
     event.currentTarget.setPointerCapture(event.pointerId);
   }
 
   function handlePointerMove(event) {
-    const previous = pointers.current.get(event.pointerId);
+    const previous = activePointers.current.get(event.pointerId);
     if (!previous) return;
     const next = { x: event.clientX, y: event.clientY };
-    if (pointers.current.size === 2) {
-      const other = [...pointers.current.entries()].find(([id]) => id !== event.pointerId)[1];
+
+    if (activePointers.current.size === 2) {
+      const other = [...activePointers.current.entries()].find(([id]) => id !== event.pointerId)[1];
       const oldDistance = Math.hypot(previous.x - other.x, previous.y - other.y);
       const newDistance = Math.hypot(next.x - other.x, next.y - other.y);
-      if (oldDistance > 0) setView(value => constrain({ ...value, scale: value.scale * newDistance / oldDistance }));
+      if (oldDistance > 0) {
+        const zoomFactor = newDistance / oldDistance;
+        setView(previousView => constrainView({ ...previousView, scale: previousView.scale * zoomFactor }));
+      }
     } else {
-      setView(value => constrain({ ...value, x: value.x + next.x - previous.x, y: value.y + next.y - previous.y }));
+      setView(previousView => constrainView({
+        ...previousView,
+        x: previousView.x + next.x - previous.x,
+        y: previousView.y + next.y - previous.y
+      }));
     }
-    pointers.current.set(event.pointerId, next);
+    activePointers.current.set(event.pointerId, next);
   }
 
-  function clearPointer(event) { pointers.current.delete(event.pointerId); }
+  function clearPointer(event) {
+    activePointers.current.delete(event.pointerId);
+  }
+
+  function handleCancel(event) {
+    event.preventDefault();
+    onClose();
+  }
+
+  function toggleZoom() {
+    setView(previous => previous.scale > 1
+      ? initialView
+      : constrainView({ ...initialView, scale: 2 })
+    );
+  }
 
   return (
-    <dialog ref={dialogRef} id="lightbox" aria-label="Полноэкранный просмотр картины" onCancel={event => { event.preventDefault(); onClose(); }}>
+    <dialog ref={dialogRef} className="lightbox" aria-label="Полноэкранный просмотр картины" onCancel={handleCancel}>
       <div
         ref={stageRef}
-        className={`zoom-stage${view.scale > 1 ? ' is-zoomed' : ''}`}
-        onDoubleClick={() => setView(value => value.scale > 1 ? initialView : constrain({ ...initialView, scale: 2 }))}
+        className={`lightbox-stage${view.scale > 1 ? ' is-zoomed' : ''}`}
+        onDoubleClick={toggleZoom}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={clearPointer}
@@ -80,7 +111,7 @@ export default function Lightbox({ artwork, onClose }) {
       >
         <img
           ref={imageRef}
-          id="full-image"
+          className="lightbox-image"
           src={artwork.src}
           alt={`${artwork.title}, ${artwork.year}. Казимир Малевич`}
           draggable={false}
@@ -88,7 +119,7 @@ export default function Lightbox({ artwork, onClose }) {
           style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.scale})` }}
         />
       </div>
-      <button className="close" aria-label="Закрыть просмотр" onClick={onClose}>×</button>
+      <button className="lightbox-close" aria-label="Закрыть просмотр" onClick={onClose}>×</button>
     </dialog>
   );
 }

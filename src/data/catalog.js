@@ -11,14 +11,14 @@ export const periods = [
 ];
 
 // Preliminary grouping from filenames, not a scholarly attribution.
-export function getPeriod(artwork) {
-  if (artwork.year >= 1932) return 5;
-  if (artwork.year >= 1928) return 4;
-  if (artwork.year > 1915 || (
-    artwork.year === 1915 && /супрем|квадрат|круг|крест/i.test(artwork.title)
-  )) return 3;
-  if (artwork.year >= 1913) return 2;
-  return artwork.year >= 1910 ? 1 : 0;
+function getPeriod({ year, title }) {
+  if (year >= 1932) return 5;
+  if (year >= 1928) return 4;
+  const isEarlySuprematism = year === 1915 && /супрем|квадрат|круг|крест/i.test(title);
+  if (year > 1915 || isEarlySuprematism) return 3;
+
+  if (year >= 1913) return 2;
+  return year >= 1910 ? 1 : 0;
 }
 
 export const artworks = sourceArtworks.map(artwork => ({

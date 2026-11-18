@@ -4,15 +4,22 @@ import Gallery from './components/Gallery.jsx';
 import Lightbox from './components/Lightbox.jsx';
 
 export default function App() {
-  const [openedArtwork, setOpenedArtwork] = useState(null);
+  const [openArtwork, setOpenArtwork] = useState(null);
+
+  function closeArtwork() {
+    setOpenArtwork(null);
+  }
 
   return (
     <>
       <main>
         <Narrative />
-        <Gallery onOpen={setOpenedArtwork} isLightboxOpen={openedArtwork !== null} />
+        <Gallery
+          onOpenArtwork={setOpenArtwork}
+          isLightboxOpen={openArtwork !== null}
+        />
       </main>
-      {openedArtwork && <Lightbox artwork={openedArtwork} onClose={() => setOpenedArtwork(null)} />}
+      {openArtwork && <Lightbox artwork={openArtwork} onClose={closeArtwork} />}
     </>
   );
 }
