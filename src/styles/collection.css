@@ -18,30 +18,27 @@
 }
 
 .collection-search input {
-  align-self: start;
   min-width: 0;
-  margin-top: 3px;
   padding: 0 0 3px;
   border: 0;
-  border-bottom: 1px solid #777;
   border-radius: 0;
+  background: linear-gradient(currentColor, currentColor) center bottom / 100% var(--underline-height) no-repeat;
+  color: inherit;
   font: inherit;
 }
 
+.collection-search input::placeholder {
+  color: inherit;
+  opacity: 1;
+}
+
 .collection-search input:focus-visible {
-  border-bottom-color: var(--accent);
+  background-image: linear-gradient(var(--accent), var(--accent));
   outline: none;
-  box-shadow: 0 1px var(--accent);
 }
 
 .collection-search button {
-  padding: 8px 12px;
-  background: #111;
-  color: #fff;
-}
-
-.collection-search button:disabled {
-  opacity: 0.45;
+  padding: 6px 0;
 }
 
 .collection-search-status {
@@ -73,6 +70,9 @@
 
 .collection-tile[data-highlighted='true'] {
   background: var(--accent);
+}
+
+.collection-tile[data-highlighted='true'] :is(.collection-tile-caption, .artwork-caption-year) {
   color: #fff;
 }
 
@@ -84,9 +84,9 @@
   object-position: center bottom;
 }
 
-.collection-tile-title {
+.collection-tile-caption {
+  align-self: center;
   font-size: clamp(12px, 1.1vw, 16px);
-  line-height: 1.25;
   overflow-wrap: anywhere;
 }
 

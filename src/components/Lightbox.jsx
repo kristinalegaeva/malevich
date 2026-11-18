@@ -83,7 +83,7 @@ export default function Lightbox({ artwork, onClose }) {
   }
 
   return (
-    <FullscreenDialog className="lightbox" label="Полноэкранный просмотр картины" onClose={onClose}>
+    <FullscreenDialog className="lightbox" label="полноэкранный просмотр картины" onClose={onClose}>
       <div
         ref={stageRef}
         className={`lightbox-stage${view.scale > 1 ? ' is-zoomed' : ''}`}

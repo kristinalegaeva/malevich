@@ -8,7 +8,7 @@ export default function Timeline({ activeIndex, onSelectArtwork }) {
 
   return (
     <>
-      <div className="timeline" aria-label="Все произведения">
+      <div className="timeline" aria-label="все произведения">
         <img className="timeline-rule" src={assetUrl('assets/timeline-line.svg')} alt="" />
         <div className="timeline-markers">
           {artworks.map((item, index) => (
@@ -32,23 +32,25 @@ export default function Timeline({ activeIndex, onSelectArtwork }) {
         </div>
       </div>
 
-      <div className="gallery-caption" aria-live="polite">
+      <div className="gallery-caption artwork-caption" aria-live="polite">
         <h2>{artwork.title}</h2>
+        <span className="artwork-caption-year">{artwork.year}</span>
       </div>
 
-      <nav className="gallery-periods" aria-label="Периоды творчества">
+      <nav className="gallery-periods" aria-label="периоды творчества">
         {periods.map((period, index) => {
           const firstIndex = artworks.findIndex(item => item.period === index);
           return (
             <Fragment key={period.name}>
               {index > 0 && <span className="gallery-period-divider" aria-hidden="true">/</span>}
               <button
+                className="text-action"
                 title={period.dates}
                 disabled={firstIndex < 0}
                 aria-current={index === artwork.period ? 'true' : 'false'}
                 onClick={() => onSelectArtwork(firstIndex)}
               >
-                {period.name}
+                <span className="text-action-label">{period.name}</span>
               </button>
             </Fragment>
           );

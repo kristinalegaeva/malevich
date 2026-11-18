@@ -5,7 +5,7 @@
 .fullscreen-dialog {
   border: 0;
   background: #fff;
-  color: #111;
+  color: inherit;
   padding: 0;
   width: 100vw;
   height: 100dvh;
@@ -61,4 +61,8 @@
   background: #fffd;
   font-size: 30px;
   line-height: 1;
+}
+
+.fullscreen-close:is(:hover, :focus-visible) {
+  color: var(--accent);
 }

@@ -151,9 +151,9 @@ export default function StorySequence({ children }) {
 
       for (const paragraph of sequence.querySelectorAll('.story-part')) {
         const copy = paragraph.querySelector('.story-copy');
-        gsap.from(copy, {
-          autoAlpha: 0,
-          ease: 'none',
+        const panel = copy.querySelector('.story-panel');
+        const reveal = gsap.timeline({
+          defaults: { ease: 'none' },
           scrollTrigger: {
             trigger: paragraph,
             start: 'top 85%',
@@ -161,11 +161,15 @@ export default function StorySequence({ children }) {
             scrub: 0.3
           }
         });
+        reveal.from(panel, { '--story-background-opacity': 0 }, 0);
+        reveal.from(panel.children, { autoAlpha: 0 }, 0);
+
+        if (phone) continue;
 
         gsap.to(copy, {
           keyframes: [
-            { yPercent: -15, duration: 0.25, ease: 'sine.inOut' },
-            { yPercent: 15, duration: 0.5, ease: 'sine.inOut' },
+            { yPercent: -12, duration: 0.25, ease: 'sine.inOut' },
+            { yPercent: 12, duration: 0.5, ease: 'sine.inOut' },
             { yPercent: 0, duration: 0.25, ease: 'sine.inOut' }
           ],
           scrollTrigger: {

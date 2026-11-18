@@ -8,11 +8,12 @@ function normalizeSearch(value) {
 
 const collection = artworks.map(artwork => {
   const title = `${artwork.title}, ${artwork.year}`;
-  return { artwork, title, searchText: normalizeSearch(title) };
+  return { artwork, searchText: normalizeSearch(title) };
 });
 
 export default function CollectionDialog({ onOpenArtwork, onClose }) {
   const gridRef = useRef(null);
+  const searchRef = useRef(null);
   const [query, setQuery] = useState('');
   const [result, setResult] = useState(null);
 
@@ -24,7 +25,10 @@ export default function CollectionDialog({ onOpenArtwork, onClose }) {
   function handleSearch(event) {
     event.preventDefault();
     const search = normalizeSearch(query);
-    if (!search) return;
+    if (!search) {
+      searchRef.current.focus();
+      return;
+    }
 
     const words = search.split(/\s+/);
     const matches = collection.filter(item => words.every(word => item.searchText.includes(word)));
@@ -44,18 +48,19 @@ export default function CollectionDialog({ onOpenArtwork, onClose }) {
   }
 
   return (
-    <FullscreenDialog className="collection-dialog" label="Вся коллекция" onClose={onClose}>
+    <FullscreenDialog className="collection-dialog" label="вся коллекция" onClose={onClose}>
       <header className="collection-toolbar">
         <form className="collection-search" role="search" onSubmit={handleSearch}>
           <input
+            ref={searchRef}
             type="search"
-            aria-label="Название или год картины"
+            aria-label="название или год картины"
             placeholder="название или год"
             value={query}
             onChange={handleQueryChange}
           />
-          <button type="submit" disabled={!query.trim()}>
-            {result?.total > 1 ? 'далее' : 'найти'}
+          <button className="text-action" type="submit">
+            <span className="text-action-label">{result?.total > 1 ? 'далее' : 'найти'}</span>
           </button>
 
           {result && (
@@ -77,7 +82,10 @@ export default function CollectionDialog({ onOpenArtwork, onClose }) {
               onClick={() => onOpenArtwork(item.artwork)}
             >
               <img src={item.artwork.src} alt="" loading="lazy" decoding="async" />
-              <span className="collection-tile-title">{item.title}</span>
+              <span className="collection-tile-caption artwork-caption">
+                <span>{item.artwork.title}</span>
+                <span className="artwork-caption-year">{item.artwork.year}</span>
+              </span>
             </button>
           ))}
         </div>
