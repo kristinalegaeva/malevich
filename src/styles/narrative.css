@@ -14,6 +14,10 @@
   height: auto;
 }
 
+:root[data-theme='dark'] .hero-image {
+  filter: invert(1);
+}
+
 .story-shape-overlay {
   position: absolute;
   inset: 0;
@@ -44,7 +48,7 @@
 .collection-intro {
   width: min(100% - 48px, 675px);
   margin-inline: auto;
-  font-size: 18px;
+  font-size: var(--text-body);
   line-height: 1.3;
 }
 
@@ -67,37 +71,15 @@
 }
 
 .story-panel {
-  --story-background-opacity: 0.7;
-
   position: relative;
   padding: clamp(14px, 2.5vw, 32px);
-  color: #000;
-}
-
-.story-panel::before {
-  content: '';
-  position: absolute;
-  inset: 0;
   border-radius: 6px;
-  background: url('./acrylic-grain.png') repeat, rgb(255 255 255 / 50%);
-  opacity: var(--story-background-opacity);
-  pointer-events: none;
-}
-
-.story-panel > * {
-  position: relative;
-}
-
-@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .story-panel::before {
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
-  }
+  color: var(--ink);
 }
 
 .story-part h2 {
   margin-bottom: 10px;
-  font-size: clamp(24px, 2.36vw, 42px);
+  font-size: var(--text-heading);
   font-style: italic;
 }
 
@@ -116,10 +98,6 @@
     display: block;
   }
 
-  .story,
-  .collection-intro {
-    font-size: 15px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -23,10 +23,25 @@
 :root {
   font-family: Helvetica, Arial, sans-serif;
   font-synthesis: none;
-  color: #000;
-  background: #fff;
+  color-scheme: light;
+  color: var(--ink);
+  background: var(--surface);
+  --ink-rgb: 0 0 0;
+  --ink: rgb(var(--ink-rgb));
+  --surface-rgb: 255 255 255;
+  --surface: rgb(var(--surface-rgb));
   --accent: #C82822;
   --underline-height: 1px;
+  --text-small: 0.875rem;
+  --text-body: 1rem;
+  --text-heading: clamp(1.5rem, 2.4vw, 2rem);
+  --icon-size: 1.75rem;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --ink-rgb: 245 244 240;
+  --surface-rgb: 0 0 0;
 }
 
 * {
@@ -45,6 +60,10 @@ h2 {
   margin: 0;
 }
 
+body {
+  font-size: var(--text-body);
+}
+
 button {
   font: inherit;
   color: inherit;
@@ -53,7 +72,7 @@ button {
   cursor: pointer;
 }
 
-button:focus-visible {
+:is(button, a):focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 5px;
 }
@@ -73,8 +92,28 @@ button:disabled {
   background-size: 100% var(--underline-height);
 }
 
+.acrylic-surface {
+  --acrylic-opacity: 0.7;
+}
+
+.acrylic-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: url('./acrylic-grain.png') repeat, rgb(var(--surface-rgb) / 50%);
+  opacity: var(--acrylic-opacity);
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.acrylic-surface > * {
+  position: relative;
+}
+
 .artwork-caption {
-  color: #000;
+  color: var(--ink);
   line-height: 1;
   text-align: center;
 }

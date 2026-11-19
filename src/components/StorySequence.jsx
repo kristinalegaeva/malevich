@@ -161,7 +161,7 @@ export default function StorySequence({ children }) {
             scrub: 0.3
           }
         });
-        reveal.from(panel, { '--story-background-opacity': 0 }, 0);
+        reveal.from(panel, { '--acrylic-opacity': 0 }, 0);
         reveal.from(panel.children, { autoAlpha: 0 }, 0);
 
         if (phone) continue;

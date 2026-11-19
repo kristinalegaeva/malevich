@@ -42,7 +42,7 @@
 }
 
 .collection-search-status {
-  font-size: 14px;
+  font-size: var(--text-small);
 }
 
 .collection-scroll {
@@ -86,7 +86,7 @@
 
 .collection-tile-caption {
   align-self: center;
-  font-size: clamp(12px, 1.1vw, 16px);
+  font-size: var(--text-small);
   overflow-wrap: anywhere;
 }
 

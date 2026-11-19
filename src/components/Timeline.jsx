@@ -8,7 +8,7 @@ export default function Timeline({ activeIndex, onSelectArtwork }) {
 
   return (
     <>
-      <div className="timeline" aria-label="все произведения">
+      <div className="timeline" id="timeline" aria-label="все произведения">
         <img className="timeline-rule" src={assetUrl('assets/timeline-line.svg')} alt="" />
         <div className="timeline-markers">
           {artworks.map((item, index) => (

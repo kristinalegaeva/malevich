@@ -4,7 +4,7 @@
 
 .fullscreen-dialog {
   border: 0;
-  background: #fff;
+  background: var(--surface);
   color: inherit;
   padding: 0;
   width: 100vw;
@@ -16,7 +16,7 @@
 }
 
 .fullscreen-dialog::backdrop {
-  background: #fff;
+  background: var(--surface);
 }
 
 .lightbox-stage {
@@ -58,11 +58,41 @@
   height: 40px;
   padding: 0;
   border-radius: 50%;
-  background: #fffd;
-  font-size: 30px;
+  background: rgb(var(--surface-rgb) / 87%);
+  font-size: var(--icon-size);
   line-height: 1;
 }
 
 .fullscreen-close:is(:hover, :focus-visible) {
+  color: var(--accent);
+}
+
+.about-dialog {
+  overflow-y: auto;
+}
+
+.about-copy {
+  max-width: 675px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 120px) 24px 48px;
+  font-size: var(--text-body);
+  line-height: 1.45;
+}
+
+.about-copy h1 {
+  margin-bottom: 24px;
+  font-size: var(--text-heading);
+}
+
+.about-copy p + p {
+  margin-top: 1em;
+}
+
+.about-copy a {
+  color: inherit;
+  text-underline-offset: 0.16em;
+}
+
+.about-copy a:is(:hover, :focus-visible) {
   color: var(--accent);
 }
