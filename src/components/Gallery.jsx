@@ -115,7 +115,6 @@ export default function Gallery({ onOpenArtwork, onOpenCollection, isDialogOpen 
             onClick={() => onOpenArtwork(artwork)}
           >
             <img src={artwork.src} alt={`${artwork.title}, ${artwork.year}. Казимир Малевич`} />
-            <span className="gallery-artwork-label">развернуть ↗</span>
           </button>
           <button
             className="gallery-arrow"
